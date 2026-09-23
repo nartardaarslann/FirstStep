@@ -1,0 +1,24 @@
+import { useEffect, useState } from 'react';
+import { View, Text, ScrollView, Pressable, FlatList, ActivityIndicator } from 'react-native';
+import { makeStyles, useTheme } from '@/src/theme';
+import { useApp } from '@/src/app-context';
+import { api } from '@/src/api';
+import { Meal } from '@/src/types';
+import MealCard from '@/src/components/MealCard';
+import { Icon, Button, Info, useTypography } from '@/src/components/ui';
+
+const FILTERS = [['all', 'Tüm öğünler'], ['home', 'Ev yapımı'], ['restaurant', 'Restoran'], ['packaged', 'Paketli']];
+export default function Meals() {
+  const s = useStyles(); const t = useTypography(); const { colors: c } = useTheme(); const { data, inspectMeal, setPanel } = useApp();
+  const [filter, setFilter] = useState('all'); const [meals, setMeals] = useState<Meal[]>([]); const [busy, setBusy] = useState(true); const [error, setError] = useState('');
+  const load = async () => { setBusy(true); try { setMeals(await api('/meals')); setError(''); } catch (e: any) { setError(e.message); } finally { setBusy(false); } };
+  useEffect(() => { void load(); }, [data]);
+  const filtered = meals.filter(m => filter === 'all' || m.tag === filter);
+  return <View style={s.screen}>
+    <View style={s.filterRow}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.filters}>{FILTERS.map(([key, label]) => <Pressable key={key} testID={`meal-filter-${key}`} onPress={() => setFilter(key)} style={({ pressed }) => [s.chip, key === filter && s.selected, pressed && s.pressed]}><Text style={[s.chipText, key === filter && s.selectedText]}>{label}</Text></Pressable>)}</ScrollView></View>
+    <FlatList testID="meal-history-list" data={filtered} keyExtractor={m => m.meal_id} showsVerticalScrollIndicator={false} refreshing={busy} onRefresh={load} contentContainerStyle={s.list} ItemSeparatorComponent={() => <View style={s.separator} />} ListHeaderComponent={<View style={s.intro}><View style={s.introTop}><View style={s.introIcon}><Icon name="leaf-outline" size={24} color={c.brandPrimary} /></View><View style={t.flex}><Text style={t.h3}>Sayılar değil, seçimler.</Text><Text style={t.small}>Her öğün, kendine attığın küçük bir adım.</Text></View></View><View style={s.summary}><Text style={s.summaryCount}>{meals.length}<Text style={s.summaryLabel}> kayıtlı öğün</Text></Text><Text style={s.summaryNatural}>{meals.filter(m => m.tag === 'home').length} ev yapımı</Text></View><Info text={error} error /></View>}
+      renderItem={({ item }) => <View style={s.item}><Text style={s.date}>{new Date(`${item.date}T12:00:00`).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })}</Text><MealCard meal={item} onPress={() => inspectMeal(item)} /></View>}
+      ListEmptyComponent={busy ? <ActivityIndicator color={c.brandPrimary} /> : <View testID="meals-empty-state" style={s.empty}><Icon name="restaurant-outline" size={46} color={c.borderStrong} /><Text style={t.h2}>Yeni bir öğüne yer aç.</Text><Text style={[t.body, s.center]}>{filter === 'all' ? 'Tabağını fotoğrafla, kaynağını seç. Doğallık yolculuğun burada biriksin.' : 'Bu kategoride henüz bir öğün yok. Diğer kategorilere de göz atabilirsin.'}</Text><Button testID="meals-add-button" title="Öğün ekle" icon="add" onPress={() => setPanel('capture')} /></View>} />
+  </View>;
+}
+const useStyles = makeStyles(c => ({ screen: { flex: 1 }, filterRow: { height: 56, flexShrink: 0 }, filters: { alignItems: 'center', paddingHorizontal: 24, gap: 8 }, chip: { height: 36, flexShrink: 0, paddingHorizontal: 17, justifyContent: 'center', borderRadius: 22, borderWidth: 1, borderColor: c.border, backgroundColor: c.surfaceSecondary }, selected: { backgroundColor: c.brandPrimary, borderColor: c.brandPrimary }, chipText: { color: c.onSurfaceTertiary, fontSize: 12, fontWeight: '500' }, selectedText: { color: c.onBrandPrimary }, pressed: { opacity: .75 }, list: { paddingHorizontal: 24, paddingTop: 14, paddingBottom: 30, flexGrow: 1, width: '100%', maxWidth: 680, alignSelf: 'center' }, intro: { gap: 16, marginBottom: 24 }, introTop: { flexDirection: 'row', gap: 12, alignItems: 'center' }, introIcon: { height: 51, width: 51, borderRadius: 20, backgroundColor: c.mint, alignItems: 'center', justifyContent: 'center' }, summary: { borderTopWidth: 1, borderBottomWidth: 1, borderColor: c.border, paddingVertical: 17, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, summaryCount: { fontSize: 24, color: c.onSurface }, summaryLabel: { fontSize: 12, color: c.muted }, summaryNatural: { color: c.brandPrimary, fontSize: 12 }, separator: { height: 18 }, item: { gap: 8 }, date: { fontSize: 10, color: c.muted, marginLeft: 4 }, empty: { alignItems: 'center', paddingVertical: 34, gap: 18 }, center: { textAlign: 'center' } }));

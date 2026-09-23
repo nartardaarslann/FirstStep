@@ -1,0 +1,21 @@
+{
+  "source": "User-provided Organic Minimalism guidelines; no design-agent override",
+  "name": "Ritim",
+  "philosophy": "Organic Minimalism, Dieter Rams meets digital zen. No mascots, calories, aggressive colors or gamification.",
+  "typography": "System sans-serif (SF Pro on iOS), 32pt page titles, 22pt section headings, 16pt body, 12pt uppercase tracked labels",
+  "layout": "Warm ivory canvas, deep forest text, mint hero, peach nutrition, lavender recovery. 24pt side padding, 24-32pt rounded cards, pill CTAs, sticky safe-area headers, four bottom tabs with central camera action. Horizontal 36pt chips in 56pt sticky rows.",
+  "dashboard": "Bento dashboard, fluid circular daily score with gentle glow, horizontally scrolling nutrition/sleep/habit cards, warm food photography, prominent photo CTA and honest empty state.",
+  "color": {
+    "surface": "#F8F9F5", "onSurface": "#253E35",
+    "surfaceSecondary": "#FFFFFF", "onSurfaceSecondary": "#253E35",
+    "surfaceTertiary": "#EFF2EC", "onSurfaceTertiary": "#627169",
+    "surfaceInverse": "#253E35", "onSurfaceInverse": "#FFFFFF", "muted": "#7B847C",
+    "brand": "#355D4B", "onBrand": "#FFFFFF", "brandPrimary": "#355D4B", "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#DDEBE0", "onBrandSecondary": "#355D4B", "brandTertiary": "#EAF1E8", "onBrandTertiary": "#355D4B",
+    "success": "#A3CBB5", "onSuccess": "#294D3B", "warning": "#F1CFAF", "onWarning": "#77563D",
+    "error": "#DEA396", "onError": "#683F37", "info": "#DCD6EC", "onInfo": "#635675",
+    "border": "#E4E8DF", "borderStrong": "#9DB3A3", "divider": "#E8EBE3",
+    "mint": "#E3EFE5", "peach": "#F7E9DB", "lavender": "#EEE9F5", "water": "#E2ECF0", "onWater": "#527888",
+    "transparent": "transparent", "overlay": "#182C2566", "shadow": "#294D3B12", "glow": "#A3CBB530"
+  }
+}
